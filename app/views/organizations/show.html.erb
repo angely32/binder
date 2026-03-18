@@ -35,6 +35,38 @@
       <% end %>
     </div>
 
+    <!-- Charges Dropdown -->
+    <% if can?(:read, Charge.new(organization: @organization)) %>
+      <h2 class="collapsed">Charges (<%= @charges.length %>)</h2>
+      <div style="display: none">
+        <% if @charges.empty? %>
+          <p>No Charges!</p>
+        <% else %>
+          <ul>  
+            <p>
+              Total: $<%= @charges.sum(&:amount) %> — 
+              Approved: $<%= @charges.select(&:is_approved).sum(&:amount) %> — 
+              Pending: $<%= @charges.reject(&:is_approved).sum(&:amount) %>
+            </p>
+            <% @charges.each do |charge| %>
+              <li>
+                <strong><%= charge.charge_type_name %></strong> —
+                $<%= charge.amount %> —
+                <%= charge.description %> —
+                Issued by: <%= charge.issuing_participant.name %> —
+                <em>(<%= charge.charged_at.strftime("%b %d, %Y") %>)</em>
+                <% if charge.is_approved %>
+                  <span>✓ Approved</span>
+                <% else %>
+                  <span>⏳ Pending</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    <% end %>  
+
     <!-- render partial: "show_org" --> </div
   ><div class="sidebar">
     <!-- Only show Add Members button if user has permission to update Memberships for their org -->
