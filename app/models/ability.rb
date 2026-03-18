@@ -154,7 +154,7 @@ class Ability
             }
           }
       # ChargeType: Same as Builder
-      # Charge: Same as Builder
+      can :read, Charge, organization: { memberships: { participant_id: user.id } }
       # Checkout: Same as Builder
       # EventType                        -- Not currently used: Feature No Longer Used
       # Event                            -- Not currently used: Feature No Longer Used
